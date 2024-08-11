@@ -1,3 +1,5 @@
+import java.io.ByteArrayInputStream;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
@@ -19,6 +21,8 @@ public class QuizApplication {
         System.out.print("Choose difficulty (easy, medium, hard): ");
         return scanner.nextLine();
     }
+
+
 
     public void createQuiz(String difficulty) {
         if(difficulty.equalsIgnoreCase("easy")) {
@@ -50,36 +54,51 @@ public class QuizApplication {
 
         List<Question> questions = quiz.getRandomQuestions(3);
         Scanner scanner = new Scanner(System.in);
-        for (Question question : questions) {
-            question.displayQuestion();
+        DecimalFormat df = new DecimalFormat("#"); // Formatter for 0 decimal places
+
+        for(int i = 0; i < questions.size(); i++) {
+//        for (Question question : questions) {
+
+            questions.get(i).displayQuestion();
 
             final boolean[] timedOut = {false};  // To track if the timer runs out
             //the reference to the array stays the same, which is allowed
             // in anonymous class TimerTask, but can change the value inside
 
             Timer timer = new Timer();
+            int finalI = i;
             timer.schedule(new TimerTask() {
 
 
                 public void run() {
                     timedOut[0] = true;
                     System.out.println("\nTime's up!");
+
+                    if(finalI == questions.size()-1){
+                        System.exit(0);
+
+                    }
                 }
             }, 10000);  // 10-second timer for each question
+            
+            String answer = "";
 
             System.out.print("Your answer: ");
-            String answer = scanner.nextLine().trim(); //wait for user to enter text in command line and press enter
+            answer = scanner.nextLine().trim(); //wait for user to enter text in command line and press enter
             timer.cancel();  // Stop the timer when the user answers
 
-            boolean isCorrect = question.checkAnswer(answer);
+
+
+            boolean isCorrect = questions.get(i).checkAnswer(answer);
             if (timedOut[0] || !isCorrect) {
-                System.out.println("Wrong! The correct answer was " + question.getCorrectOption() + ".");
+
+                System.out.println("Wrong! The correct answer was " + questions.get(i).getCorrectOption() + ".");
 
             } else {
                 System.out.println("Correct!");
             }
             user.recordAnswer(!timedOut[0] && isCorrect);  // If timed out, it's incorrect
-            System.out.println();
+            System.out.println((i + 1) + "/" + questions.size() + " questions left. (" + df.format((double)(i+1) / (double)questions.size() *100) + "%)");
         }
         showScore();
     }

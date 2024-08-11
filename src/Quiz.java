@@ -17,5 +17,6 @@ public class Quiz {
     public List<Question> getRandomQuestions(int numQuestions) {
         Collections.shuffle(questions);
         return questions.subList(0, Math.min(numQuestions, questions.size()));
+        // return max number of possible questions, if number of questions less than parameter then this will be our min.
     }
 }

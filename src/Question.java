@@ -1,10 +1,10 @@
 public class Question {
-    private String text;
+    private String question;
     private String[] possibleAnswers;
     private String correctAnswer;
 
-    public Question(String text, String[] possibleAnswers, String correctAnswer) {
-        this.text = text;
+    public Question(String question, String[] possibleAnswers, String correctAnswer) {
+        this.question = question;
         this.possibleAnswers = possibleAnswers;
         this.correctAnswer = correctAnswer;
     }
@@ -18,7 +18,7 @@ public class Question {
     }
 
     public void displayQuestion() {
-        System.out.println(text);
+        System.out.println(question);
         for (int i = 0; i < possibleAnswers.length; i++) {
             System.out.println(("a" + (i+1)) + ". " + possibleAnswers[i]);
         }

@@ -26,6 +26,10 @@ public class QuizApplication {
                     new String[]{"Paris", "Rome", "Berlin", "Madrid"}, "Paris"));
             quiz.addQuestion(new Question("What is 2 + 2?",
                     new String[]{"3", "4", "5", "6"}, "4"));
+            quiz.addQuestion(new Question("What is 3*3?",
+                    new String[]{"3", "4", "9", "6"}, "9"));
+            quiz.addQuestion(new Question("How many colors are there in a rainbow",
+                    new String[]{"8", "7", "5", "6"}, "7"));
         }
         else if(difficulty.equalsIgnoreCase("medium")) {
             quiz.addQuestion(new Question("What is the largest ocean on Earth?",
@@ -56,7 +60,7 @@ public class QuizApplication {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
 
-                @Override
+
                 public void run() {
                     timedOut[0] = true;
                     System.out.println("\nTime's up!");

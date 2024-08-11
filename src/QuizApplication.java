@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class QuizApplication {
     private Quiz quiz;
@@ -23,46 +25,46 @@ public class QuizApplication {
                 new String[]{"3", "4", "5", "6"}, "4"));
         quiz.addQuestion(new Question("Which planet is known as the Red Planet?",
                 new String[]{"Earth", "Mars", "Jupiter", "Saturn"}, "Mars"));
-
         quiz.addQuestion(new Question("What is the largest ocean on Earth?",
                 new String[]{"Atlantic", "Indian", "Arctic", "Pacific"}, "Pacific"));
     }
 
-//    public void startQuiz() {
-//        System.out.println("\nWelcome, " + user.getName() + "! Let's start the quiz.");
-//        List<Question> questions = quiz.getRandomQuestions(3);
-//        Scanner scanner = new Scanner(System.in);
-//        for (Question question : questions) {
-//            question.displayQuestion();
-//            System.out.print("Your answer: ");
-//            String answer = scanner.nextLine().trim();
-//            if (question.checkAnswer(answer)) {
-//                System.out.println("Correct!");
-//                user.recordAnswer(true);
-//            } else {
-//                System.out.println("Wrong! The correct answer was " + question.checkAnswer(answer));
-//                user.recordAnswer(false);
-//            }
-//            System.out.println();
-//        }
-//        showScore();
-//    }
 
     public void startQuiz() {
-        System.out.println("\nWelcome, " + user.getName() + "! Let's start the quiz.");
+        System.out.println("\nWelcome, " + user.getName() + "! You have 10 seconds to" +
+                " answer each question. Make the most of your time. Good luck!");
+
         List<Question> questions = quiz.getRandomQuestions(3);
         Scanner scanner = new Scanner(System.in);
         for (Question question : questions) {
             question.displayQuestion();
+
+            final boolean[] timedOut = {false};  // To track if the timer runs out
+            //the reference to the array stays the same, which is allowed
+            // in anonymous class TimerTask, but can change the value inside
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    timedOut[0] = true;
+                    System.out.println("\nTime's up!");
+                }
+            }, 10000);  // 10-second timer for each question
+
             System.out.print("Your answer: ");
-            String answer = scanner.nextLine().trim();
+            String answer = scanner.nextLine().trim(); //wait for user to enter text in command line and press enter
+            timer.cancel();  // Stop the timer when the user answers
+
             boolean isCorrect = question.checkAnswer(answer);
-            if (isCorrect) {
-                System.out.println("Correct!");
-            } else {
+            if (timedOut[0] || !isCorrect) {
                 System.out.println("Wrong! The correct answer was " + question.getCorrectOption() + ".");
+
+            } else {
+                System.out.println("Correct!");
             }
-            user.recordAnswer(isCorrect);
+            user.recordAnswer(!timedOut[0] && isCorrect);  // If timed out, it's incorrect
             System.out.println();
         }
         showScore();

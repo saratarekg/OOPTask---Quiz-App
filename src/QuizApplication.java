@@ -11,22 +11,32 @@ public class QuizApplication {
         quiz = new Quiz();
     }
 
-    public void registerUser() {
+    public String registerUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         user = new User(name);
+        System.out.print("Choose difficulty (easy, medium, hard): ");
+        return scanner.nextLine();
     }
 
-    public void createQuiz() {
-        quiz.addQuestion(new Question("What is the capital of France?",
-                new String[]{"Paris", "Rome", "Berlin", "Madrid"}, "Paris"));
-        quiz.addQuestion(new Question("What is 2 + 2?",
-                new String[]{"3", "4", "5", "6"}, "4"));
-        quiz.addQuestion(new Question("Which planet is known as the Red Planet?",
-                new String[]{"Earth", "Mars", "Jupiter", "Saturn"}, "Mars"));
-        quiz.addQuestion(new Question("What is the largest ocean on Earth?",
-                new String[]{"Atlantic", "Indian", "Arctic", "Pacific"}, "Pacific"));
+    public void createQuiz(String difficulty) {
+        if(difficulty.equalsIgnoreCase("easy")) {
+            quiz.addQuestion(new Question("What is the capital of France?",
+                    new String[]{"Paris", "Rome", "Berlin", "Madrid"}, "Paris"));
+            quiz.addQuestion(new Question("What is 2 + 2?",
+                    new String[]{"3", "4", "5", "6"}, "4"));
+        }
+        else if(difficulty.equalsIgnoreCase("medium")) {
+            quiz.addQuestion(new Question("What is the largest ocean on Earth?",
+                    new String[]{"Atlantic", "Indian", "Arctic", "Pacific"}, "Pacific"));
+        }
+        else{
+            quiz.addQuestion(new Question("Which planet is known as the Red Planet?",
+                    new String[]{"Earth", "Mars", "Jupiter", "Saturn"}, "Mars"));
+        }
+
+
     }
 
 
@@ -75,8 +85,8 @@ public class QuizApplication {
     }
 
     public void run() {
-        registerUser();
-        createQuiz();
+        String difficulty = registerUser();
+        createQuiz(difficulty);
         startQuiz();
     }
 }
